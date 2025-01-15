@@ -1,5 +1,6 @@
-from fastapi import FastAPI, HTTPException, Form
+from fastapi import FastAPI, HTTPException, Form, Request
 from fastapi.responses import JSONResponse
+from fastapi.templating import Jinja2Templates
 import uvicorn
 import tensorflow as tf
 import numpy as np
@@ -9,6 +10,8 @@ import tempfile
 import os
 
 app = FastAPI()
+
+templates = Jinja2Templates(directory="templates")
 
 
 try:
@@ -70,6 +73,11 @@ def process_model_predictions(images):
             "normal_ratio": normal_ratio
         }
     }
+
+@app.get("/")
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
 
 @app.post("/predict")
 async def predict(video_url: str = Form(...)):
