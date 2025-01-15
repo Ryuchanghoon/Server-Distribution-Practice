@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pose h5 Model Analysis</title>
+</head>
+<body>
+    <h1>Model extract analyze</h1>
+    <form id="urlForm">
+        <label for="video_url">Video URL:</label>
+        <input type="url" id="video_url" name="video_url" required>
+        <button type="submit">분석</button>
+    </form>
+    <div id="response"></div>
+    <script>
+        const form = document.getElementById('urlForm');
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const video_url = document.getElementById('video_url').value;
+            const formData = new URLSearchParams();
+            formData.append('video_url', video_url);
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: formData
+            });
+
+            const data = await response.json();
+            document.getElementById('response').innerText = JSON.stringify(data, null, 2);
+        };
+    </script>
+</body>
+</html>
